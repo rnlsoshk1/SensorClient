@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -17,12 +18,14 @@
 
         <Button
             android:id="@+id/true_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="80dp"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/button_shape"
             android:text="True 보정"
+            android:textColor="#ffffff"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -40,6 +43,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/true_btn" />
+
+        <Button
+            android:id="@+id/init_btn2"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:background="@drawable/init_button_shape"
+            android:text="초기화"
+            android:gravity="center"
+            android:textColor="#ffffff"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
     </android.support.constraint.ConstraintLayout>
 
     <View
@@ -61,12 +76,14 @@
 
         <Button
             android:id="@+id/false_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="130dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="80dp"
             android:layout_marginEnd="8dp"
+            android:background="@drawable/button_shape"
             android:text="False 보정"
+            android:textColor="#ffffff"
             android:textSize="20sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

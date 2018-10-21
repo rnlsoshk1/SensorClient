@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,8 +52,10 @@ public class ActiveFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 on_btn.setEnabled(false);
+                on_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
                 off_btn.setEnabled(true);
-                //active_img.setImageDrawable("@mipmap/ic_launcher");
+                off_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
+                active_img.setImageResource(R.drawable.run);
                 getContext().startService(intent);
             }
         });
@@ -61,7 +64,10 @@ public class ActiveFragment extends Fragment{
             @Override
             public void onClick(View view) {
                 on_btn.setEnabled(true);
+                on_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
                 off_btn.setEnabled(false);
+                off_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
+                active_img.setImageResource(R.drawable.sleep);
                 if (intent != null) {
                     getContext().stopService(intent);
                 }

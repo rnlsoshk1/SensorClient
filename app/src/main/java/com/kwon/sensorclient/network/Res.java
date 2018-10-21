@@ -2,8 +2,10 @@ package com.kwon.sensorclient.network;
 
 public class Res {
     private String msg;
+
     public Res() {
     }
+
     public Res(String msg) {
         this.msg = msg;
     }

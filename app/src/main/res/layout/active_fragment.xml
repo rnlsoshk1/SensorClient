@@ -10,12 +10,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="150dp"
+        android:layout_marginTop="80dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.553"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@drawable/sleep" />
 
     <Button
         android:id="@+id/on_btn"
@@ -24,6 +25,8 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="ON"
+        android:textColor="#ffffff"
+        android:background="@drawable/button_shape"
         android:textSize="20sp"
         app:layout_constraintEnd_toStartOf="@+id/off_btn"
         app:layout_constraintHorizontal_bias="0.5"
@@ -37,7 +40,9 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/button_shape"
         android:text="OFF"
+        android:textColor="#ffffff"
         android:enabled="false"
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"

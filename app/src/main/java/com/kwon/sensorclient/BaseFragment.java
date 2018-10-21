@@ -1,6 +1,7 @@
 package com.kwon.sensorclient;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,7 +34,7 @@ public class BaseFragment extends Fragment {
     //private static final String URL = BuildConfig.HOST_AWS;
     //    private static final String URL = BuildConfig.Host_RASPBERRY;
     //    private static final String URL = 원하는 서버주소;
-    Button true_btn, false_btn;
+    Button true_btn, false_btn, init_btn;
     TextView true_cnt, false_cnt;
 
     private NetworkService mRetro = new RetrofitClass().getRetroService();
@@ -40,6 +42,8 @@ public class BaseFragment extends Fragment {
     private SensorManager mSensorManager = null;
     private SensorEventListener mAccLis;
     private Sensor mAccelometerSensor = null;
+    SharedPreferences pref2;
+    private boolean data = false;
 
     private double INF = Double.MAX_VALUE;   //최대값
     private int seq = 1;
@@ -60,9 +64,34 @@ public class BaseFragment extends Fragment {
         false_btn = (Button) view.findViewById(R.id.false_btn);
         true_cnt = (TextView) view.findViewById(R.id.true_cnt);
         false_cnt = (TextView) view.findViewById(R.id.false_cnt);
+        init_btn = (Button) view.findViewById(R.id.init_btn2);
 
         mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         mAccelometerSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+        pref2 = getActivity().getSharedPreferences("pref2", Context.MODE_PRIVATE);
+        if(getPreferences()){
+            true_btn.setEnabled(false);
+            true_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
+            false_btn.setEnabled(false);
+            false_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
+            true_cnt.setText("30/30");
+            false_cnt.setText("15/15");
+        }
+
+        init_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                true_btn.setEnabled(true);
+                true_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
+                false_btn.setEnabled(true);
+                false_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
+                true_cnt.setText("0/30");
+                false_cnt.setText("0/15");
+                cntTrue = 0;
+                cntFalse = 0;
+                seq = 1;
+            }
+        });
 
         true_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,7 +105,9 @@ public class BaseFragment extends Fragment {
                     cntTrue++;
                     true_cnt.setText(cntTrue+"/30");
                     true_btn.setEnabled(false);
+                    true_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
                     false_btn.setEnabled(false);
+                    false_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
                     mAccLis = new AccelometerListener();
                     mSensorManager.registerListener(mAccLis, mAccelometerSensor, SensorManager.SENSOR_DELAY_GAME);
                 }
@@ -95,13 +126,27 @@ public class BaseFragment extends Fragment {
                 else{
                     cntFalse++;
                     false_cnt.setText(cntFalse+"/15");
+                    if(cntFalse == 15){
+                        savePreferences();
+                    }
                     true_btn.setEnabled(false);
+                    true_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
                     false_btn.setEnabled(false);
+                    false_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.enable_shape));
                     mAccLis = new AccelometerListener_False();
                     mSensorManager.registerListener(mAccLis, mAccelometerSensor, SensorManager.SENSOR_DELAY_GAME);
                 }
             }
         });
+    }
+    private boolean getPreferences(){
+        return pref2.getBoolean("data", false);
+    }
+
+    private void savePreferences(){
+        SharedPreferences.Editor editor = pref2.edit();
+        editor.putBoolean("data", true);
+        editor.apply();
     }
 
     //true 기반데이터
@@ -116,7 +161,9 @@ public class BaseFragment extends Fragment {
                 mSensorManager.unregisterListener(mAccLis);
                 i = 0;
                 true_btn.setEnabled(true);
+                true_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
                 false_btn.setEnabled(true);
+                false_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
                 sendSDO(new SaveDataObj(seq, array));
             } else {   //basePoint를 array배열에 저장. basePoint = 절대값(측정되는 값 - 현 위치 current값)
                 array[i] = abs(event.values[0] - MyGlobals.getInstance().getX());
@@ -147,7 +194,9 @@ public class BaseFragment extends Fragment {
                 mSensorManager.unregisterListener(mAccLis);
                 i = 0;
                 true_btn.setEnabled(true);
+                true_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
                 false_btn.setEnabled(true);
+                false_btn.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.button_shape));
                 sendSDO(new SaveDataObj(seq, array));
             } else {
                 array[i] = abs(event.values[0] - MyGlobals.getInstance().getX());
@@ -173,7 +222,7 @@ public class BaseFragment extends Fragment {
            public void onResponse(Call<Res> call, Response<Res> response) {
                if (response.isSuccessful()) {
                    Log.d("LOG", "전송 : " + response.body());
-                   Toast.makeText(getActivity().getApplicationContext(), "전송", Toast.LENGTH_SHORT).show();
+//                   Toast.makeText(getActivity().getApplicationContext(), "전송", Toast.LENGTH_SHORT).show();
                    //seqText.setText("저장개수" + seq);
                    seq++;
                } else {

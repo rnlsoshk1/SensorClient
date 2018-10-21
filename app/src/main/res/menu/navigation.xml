@@ -3,18 +3,18 @@
     <item
         android:id="@+id/navigation_init"
         android:orderInCategory="0"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/progress2"
         android:title="자가보정" />
 
     <item
         android:id="@+id/navigation_Base"
         android:orderInCategory="1"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/loupe"
         android:title="Base" />
 
     <item
         android:id="@+id/navigation_active"
         android:orderInCategory="3"
-        android:icon="@drawable/ic_launcher_foreground"
+        android:icon="@drawable/shield"
         android:title="활성화" />
 </menu>

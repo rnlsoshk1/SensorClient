@@ -89,11 +89,11 @@ public class MyService extends IntentService implements SensorEventListener {
                     magnetic = true;
                 }
             } else {
-                if((abs(event.values[0] - mMagnetic[0]) >= 10) || (abs(event.values[1] - mMagnetic[1]) >= 10)
-                        || (abs(event.values[2] - mMagnetic[2]) >= 10))
-                    send = true;
+                send = (abs(event.values[0] - mMagnetic[0]) >= 10) || (abs(event.values[1] - mMagnetic[1]) >= 10)
+                        || (abs(event.values[2] - mMagnetic[2]) >= 10);
             }
         }
+
         else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
             // temp. 무시하세요
             total++;
@@ -111,33 +111,34 @@ public class MyService extends IntentService implements SensorEventListener {
             }
 
             //x50개, y50개, z50개 수집완료, 서버전송
-            if ((i == 50) && send) {
+            if (i >= 50) {
                 Log.i("LOG", "Array is Full.");
                 Log.i("KWON","x : "+ MyGlobals.getInstance().getX() + ", y : "+ MyGlobals.getInstance().getY() + ", z : "+ MyGlobals.getInstance().getZ());
                 i = 0;
 
-                SaveDataObj obj = new SaveDataObj();
-                obj.setData(array);
-                mRetro.open(obj).enqueue(new Callback<Res>() {
-                    @Override
-                    public void onResponse(Call<Res> call, Response<Res> response) {
-                        if (response.isSuccessful()) {
-                            Log.d("LOG", "전송 : " + response.body());
-                            Toast.makeText(getApplicationContext(), "전송", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Log.e("LOG", "response = " + response.code());
-                            Toast.makeText(getApplicationContext(), "Noise", Toast.LENGTH_SHORT).show();
+                if(send){
+                    SaveDataObj obj = new SaveDataObj();
+                    obj.setData(array);
+                    mRetro.open(obj).enqueue(new Callback<Res>() {
+                        @Override
+                        public void onResponse(Call<Res> call, Response<Res> response) {
+                            if (response.isSuccessful()) {
+                                Log.d("LOG", "전송 : " + response.body());
+                                Toast.makeText(getApplicationContext(), "전송", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Log.e("LOG", "response = " + response.code());
+                                Toast.makeText(getApplicationContext(), "Noise", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Res> call, Throwable t) {
-                        Log.e("LOG", "네트워크 확인 : " + t);
-                        Toast.makeText(getApplicationContext(), "네트워크 연결 확인 필요", Toast.LENGTH_SHORT).show();
-                        onDestroy();
-                    }
-                });
-                accumulate = false;
+                        @Override
+                        public void onFailure(Call<Res> call, Throwable t) {
+                            Log.e("LOG", "네트워크 확인 : " + t);
+                            Toast.makeText(getApplicationContext(), "네트워크 연결 확인 필요", Toast.LENGTH_SHORT).show();
+                            //onDestroy();
+                        }
+                    });
+                    accumulate = false;
+                }
             } else if (accumulate) {    // 가속임계값 넘으면 가속데이터 수집
                 array[i] = abs(event.values[0] - MyGlobals.getInstance().getX());
                 array[i + 50] = abs(event.values[1] - MyGlobals.getInstance().getY());
