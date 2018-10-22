@@ -8,7 +8,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClass {
     private NetworkService mRetroService;
-    private String baseUrl = "http://13.124.254.99:3856/";    //url 수정
+    private String baseUrl = "http://115.139.157.24:8764/";
+//            "http://13.124.254.99:3856/";    //aws
+//            "http://115.139.157.24:8764/"   //라즈베리
 
     public RetrofitClass() {
         Gson gson = new GsonBuilder().setLenient().create();

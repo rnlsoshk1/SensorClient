@@ -76,22 +76,8 @@ public class MyService extends IntentService implements SensorEventListener {
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-            if(!magnetic){
-                j++;
-                sum_x += event.values[0];
-                sum_y += event.values[1];
-                sum_z += event.values[2];
-
-                if(j >= 30){
-                    mMagnetic[0] = sum_x / 30.0;
-                    mMagnetic[1] = sum_y / 30.0;
-                    mMagnetic[2] = sum_z / 30.0;
-                    magnetic = true;
-                }
-            } else {
-                send = (abs(event.values[0] - mMagnetic[0]) >= 10) || (abs(event.values[1] - mMagnetic[1]) >= 10)
-                        || (abs(event.values[2] - mMagnetic[2]) >= 10);
-            }
+            send = (abs(event.values[0] - MyGlobals.getInstance().getX2()) >= 4) || (abs(event.values[1] - MyGlobals.getInstance().getY2()) >= 4)
+                    || (abs(event.values[2] - MyGlobals.getInstance().getZ2()) >= 10);
         }
 
         else if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
